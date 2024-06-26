@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Choice Selector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Random Choice Selector</h1>
+        
+        <!-- Step 1: Input Options -->
+        {% if not options %}
+        <form id="optionsForm" action="/start" method="post">
+            <div id="options-container">
+                <input type="text" name="options" placeholder="Enter option" required>
+            </div>
+            <button type="button" onclick="addOption()">Add another option</button>
+            <button type="submit">Submit Options</button>
+        </form>
+        {% endif %}
+
+        <!-- Step 2: Display Options -->
+        {% if options %}
+        <div id="box-container">
+            {% for option in options %}
+            <div class="box">{{ option }}</div>
+            {% endfor %}
+        </div>
+        <form id="chooseForm" action="/choose" method="post">
+            {% for option in options %}
+            <input type="hidden" name="options" value="{{ option }}">
+            {% endfor %}
+            <button type="button" onclick="chooseRandom()">Choose Randomly!</button>
+        </form>
+        <form action="/" method="get">
+            {% for option in options %}
+            <input type="hidden" name="options" value="{{ option }}">
+            {% endfor %}
+            <button type="submit">Reset Options</button>
+        </form>
+        {% endif %}
+
+        <!-- Step 3: Display Result -->
+        {% if choice %}
+        <div class="result">
+            <h2>Result: {{ choice }}</h2>
+        </div>
+        <form action="/" method="get">
+            {% for option in options %}
+            <input type="hidden" name="options" value="{{ option }}">
+            {% endfor %}
+            <button type="submit">Go Back</button>
+        </form>
+        {% endif %}
+        
+        {% if error %}
+        <div class="error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
